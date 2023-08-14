@@ -1,19 +1,15 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\BondController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+/**
+ * You mentioned 'bond' as the endpoint in the task you sent. However, according to the JSON API standards, resources should be noted in plural.
+ * Docs: https://jsonapi.org/format/#crud
+ */
+Route::group(['prefix' => 'bonds ', 'controller' => BondController::class], function (): void {
+    Route::post('/', 'create');
+    Route::get('/{id}/payouts', 'payouts');
+    Route::get('/{id}/order', 'order');
+    Route::get('/orders/{id}', 'orderPayouts');
 });
