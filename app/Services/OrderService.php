@@ -49,8 +49,8 @@ class OrderService
                 }
 
                 $interestPayments[] = [
-                    'payment_date' => $date->format('Y-m-d'),
-                    'accumulated_interest' => $accumulatedInterest
+                    'date' => $date->format('Y-m-d'),
+                    'amount' => $accumulatedInterest
                 ];
                 $previousDate = $interestDate;
             }

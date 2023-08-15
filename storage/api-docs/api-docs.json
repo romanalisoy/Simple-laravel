@@ -1,0 +1,318 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "InvestAz Bond & Payouts APIs",
+        "version": "0.1"
+    },
+    "paths": {
+        "/api/bonds/": {
+            "post": {
+                "operationId": "6db2d9d98b88abb01f4f912858321ffa",
+                "summary": "Create Bond",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "issue_date": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "last_circulation_date": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "price": {
+                                        "type": "number"
+                                    },
+                                    "payment_frequency": {
+                                        "type": "string"
+                                    },
+                                    "calculation_period": {
+                                        "type": "string"
+                                    },
+                                    "coupon_rate": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "required": [
+                                    "issue_date",
+                                    "last_circulation_date",
+                                    "price",
+                                    "payment_frequency",
+                                    "calculation_period",
+                                    "coupon_rate"
+                                ]
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "issue_date": {
+                                            "type": "string",
+                                            "format": "date"
+                                        },
+                                        "last_circulation_date": {
+                                            "type": "string",
+                                            "format": "date"
+                                        },
+                                        "price": {
+                                            "type": "number"
+                                        },
+                                        "payment_frequency": {
+                                            "type": "string"
+                                        },
+                                        "calculation_period": {
+                                            "type": "string"
+                                        },
+                                        "coupon_rate": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "message": "Something went wrong"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/bonds/{id}/order": {
+            "post": {
+                "operationId": "50159503caa530316b43199c2dc2ad40",
+                "summary": "Create an order for purchasing a specific bond.",
+                "description": "This endpoint allows users to create an order for purchasing a bond. It accepts the order date and the number of bonds the user wishes to purchase. The following validations need to be ensured:\n\nThe purchase date cannot be earlier than the bond's \"Issue Date\".\nThe purchase date cannot exceed the bond's \"End of Circulation Date\".",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "bond_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "order_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2023-12-12"
+                                    },
+                                    "purchases_count": {
+                                        "type": "integer",
+                                        "example": 20
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "bond_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "order_date": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2023-12-12"
+                                        },
+                                        "purchases_count": {
+                                            "type": "integer",
+                                            "example": 20
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "message": "Something went wrong"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/bonds/{id}/payouts": {
+            "get": {
+                "operationId": "2b4a5412470166bca2e5c434c4314172",
+                "summary": "GET interest payment ",
+                "description": "This API returns the interest payment dates for a specified bond. The payment dates are calculated based on certain rules and parameters, and they should not fall on a Saturday or Sunday.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "dates": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "date": {
+                                                        "type": "string",
+                                                        "format": "date",
+                                                        "example": "2021-11-08"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "message": "Something went wrong"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/bonds/orders/{id}": {
+            "get": {
+                "operationId": "5265c8386eae6d1e6a197c18fed747a3",
+                "summary": "Bond Interest Payments",
+                "description": "This API endpoint calculates and returns the interest payment amounts for a given bond order ID. The calculation uses a formula that considers accumulated interest, nominal value, coupon interest rate, interest calculation period, past days count, and order count. It returns a list with payment dates and their corresponding amounts.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": ".",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2022-02-07"
+                                            },
+                                            "amount": {
+                                                "type": "integer",
+                                                "example": 1875
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "message": "Something went wrong"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
