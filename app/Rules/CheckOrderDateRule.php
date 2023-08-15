@@ -3,14 +3,11 @@
 namespace App\Rules;
 
 use App\Models\Bond;
-use Closure;
 use Illuminate\Contracts\Validation\Rule;
 
 class CheckOrderDateRule implements Rule
 {
-    /**
-     * @var int $bondId
-     */
+    /** @var int $bondId */
     private int $bondId;
 
     /**
@@ -23,17 +20,22 @@ class CheckOrderDateRule implements Rule
     }
 
 
+    /**
+     * @param $attribute
+     * @param mixed $value
+     * @return bool
+     */
     public function passes( $attribute, mixed $value): bool
     {
         $bond = Bond::query()->find($this->bondId);
-        info($bond);
-        info($attribute);
-        info($value);
-        return ($bond->issue_date <= $value) or ($bond->last_circulation_date >= $value);
+        return ($bond->issue_date <= $value) && ($bond->last_circulation_date >= $value);
     }
 
-    public function message()
+    /**
+     * @return string
+     */
+    public function message(): string
     {
-        // TODO: Implement message() method.
+        return 'The purchase date cannot be less than the "Issue date" or more than the "Last circulation date".';
     }
 }

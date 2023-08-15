@@ -17,18 +17,14 @@ class BondService
      */
     public function create(CreateBondRequest $request): Model|Builder
     {
-        return Bond::query()->create([
-            "issue_date" => $request->get("issue_date"),
-            "last_circulation_date" => $request->get("last_circulation_date"),
-            "price" => $request->get("price"),
-            "payment_frequency" => $request->get("payment_frequency"),
-            "calculation_period" => $request->get("calculation_period"),
-            "coupon_rate" => $request->get("coupon_rate")
-        ]);
+        return Bond::query()->create($request->toService());
     }
 
-
-    public function createOrder(CreateOrderRequest $request)
+    /**
+     * @param CreateOrderRequest $request
+     * @return Model|Builder
+     */
+    public function createOrder(CreateOrderRequest $request): Model|Builder
     {
         return Order::query()->create($request->toService());
     }

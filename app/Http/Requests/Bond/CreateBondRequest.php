@@ -33,4 +33,22 @@ class CreateBondRequest extends FormRequest
             "coupon_rate" => ['required', 'numeric', 'gt:0'],
         ];
     }
+
+
+    /**
+     * @return array
+     */
+    public function toService(): array
+    {
+        return [
+            "issue_date" => $this->get("issue_date"),
+            "last_circulation_date" => $this->get("last_circulation_date"),
+            "price" => $this->get("price"),
+            "payment_frequency" => $this->get("payment_frequency"),
+            "calculation_period" => $this->get("calculation_period"),
+            "coupon_rate" => $this->get("coupon_rate")
+        ];
+    }
+
+
 }
