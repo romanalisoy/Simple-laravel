@@ -44,8 +44,8 @@ class CreateBondRequest extends FormRequest
             "issue_date" => $this->get("issue_date"),
             "last_circulation_date" => $this->get("last_circulation_date"),
             "price" => $this->get("price"),
-            "payment_frequency" => $this->get("payment_frequency"),
-            "calculation_period" => $this->get("calculation_period"),
+            "payment_frequency" => (string)$this->get("payment_frequency"),
+            "calculation_period" => (string)$this->get("calculation_period"),
             "coupon_rate" => $this->get("coupon_rate")
         ];
     }

@@ -5,7 +5,7 @@
         "version": "0.1"
     },
     "paths": {
-        "/api/bonds/": {
+        "/api/bonds": {
             "post": {
                 "operationId": "6db2d9d98b88abb01f4f912858321ffa",
                 "summary": "Create Bond",

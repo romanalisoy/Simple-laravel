@@ -1,5 +1,6 @@
 <?php
 
+use App\Constants\BondConstant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,8 +16,8 @@ return new class extends Migration {
             $table->date('issue_date');
             $table->date('last_circulation_date');
             $table->unsignedFloat('price');
-            $table->enum('payment_frequency', [1, 2, 4, 12]);
-            $table->enum('calculation_period', [360, 364, 365]);
+            $table->enum('payment_frequency', BondConstant::PAYMENT_FREQUENCY);
+            $table->enum('calculation_period', BondConstant::CALCULATION_PERIOD);
             $table->unsignedFloat('coupon_rate');
             $table->timestamps();
         });

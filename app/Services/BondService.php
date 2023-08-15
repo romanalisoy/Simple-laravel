@@ -21,7 +21,11 @@ class BondService
         return Bond::query()->create($request->toService());
     }
 
-    public function payouts(GetBondsPayoutsRequest $request)
+    /**
+     * @param GetBondsPayoutsRequest $request
+     * @return array|array[]
+     */
+    public function payouts(GetBondsPayoutsRequest $request): array
     {
         $dates = $this->getPayoutDates(Bond::findOrFail($request->get('id')));
 
@@ -30,12 +34,16 @@ class BondService
             }, $dates);
     }
 
+    /**
+     * @param Bond $bond
+     * @return array
+     */
     private function getPayoutDates(Bond $bond): array
     {
         $periodDays = match ($bond->calculation_period) {
             360 => 12 / $bond->payment_frequency * 30,
             364 => 364 / $bond->payment_frequency,
-            365 => 365 / $bond->payment_frequency,
+            365 => 12 / $bond->payment_frequency,
             default => 30,
         };
 

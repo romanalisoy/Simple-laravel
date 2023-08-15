@@ -1,0 +1,39 @@
+version: "3"
+services:
+    web:
+        image: romanalisoy/laravel
+        depends_on:
+            - mysql
+        ports:
+            - "8000:80"
+        volumes:
+            - .:/var/www/html
+        working_dir: /var/www/html
+        entrypoint: [ "/bin/sh","-c" ]
+        env_file: .env
+        container_name: investAz
+        networks:
+            - network
+
+        command:
+            - |
+                composer install
+                chown -R apache:apache /var/www/html
+                php artisan migrate --force
+                /usr/sbin/crond -f&
+                /usr/sbin/httpd -D FOREGROUND
+        environment:
+            WAIT_HOSTS: mysql:3306
+
+    mysql:
+        image: mysql
+        container_name: investAzMySQL
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: investaz
+        networks:
+            - network
+networks:
+    network:
+        driver: bridge
+        name: investAz
