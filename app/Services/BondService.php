@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Http\Requests\Bond\CreateBondRequest;
+use App\Http\Requests\Bond\CreateOrderRequest;
 use App\Models\Bond;
+use App\Models\Order;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,5 +25,11 @@ class BondService
             "calculation_period" => $request->get("calculation_period"),
             "coupon_rate" => $request->get("coupon_rate")
         ]);
+    }
+
+
+    public function createOrder(CreateOrderRequest $request)
+    {
+        return Order::query()->create($request->toService());
     }
 }

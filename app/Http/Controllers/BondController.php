@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Bond\CreateBondRequest;
+use App\Http\Requests\Bond\CreateOrderRequest;
 use App\Http\Resources\Bond\BondResource;
 use App\Services\BondService;
 use Exception;
@@ -37,9 +38,18 @@ class BondController extends Controller
 
     }
 
-    public function order()
+    /**
+     * @param CreateOrderRequest $request
+     * @return JsonResponse
+     */
+    public function order(CreateOrderRequest $request): JsonResponse
     {
-
+        try {
+            return response()->json(new BondResource($this->bondService->createOrder($request)));
+        } catch (Exception $exception) {
+            Log::error(json_encode(["message" => $exception->getMessage(), "file" => $exception->getFile(), "line" => $exception->getLine()]));
+            return response()->json(['message' => "Something went wrong"],500);
+        }
     }
 
     public function orderPayouts()

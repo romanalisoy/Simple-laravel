@@ -28,8 +28,8 @@ class CreateBondRequest extends FormRequest
             "issue_date" => ['required', 'date', 'after_or_equal:today'],
             "last_circulation_date" => ['required', 'date', 'after:issue_date'],
             "price" => ['required', 'numeric', 'gt:0'],
-            "payment_frequency" => ['required', 'int', Rule::in(BondConstant::PAYMENT_FREQUENCY)],
-            "calculation_period" => ['required', 'int', Rule::in(BondConstant::CALCULATION_PERIOD)],
+            "payment_frequency" => ['required', 'integer', Rule::in(BondConstant::PAYMENT_FREQUENCY)],
+            "calculation_period" => ['required', 'integer', Rule::in(BondConstant::CALCULATION_PERIOD)],
             "coupon_rate" => ['required', 'numeric', 'gt:0'],
         ];
     }
