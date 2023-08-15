@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests\Bond;
 
-use App\Rules\CheckOrderDateRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateOrderRequest extends FormRequest
+class GetBondsPayoutsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,26 +23,24 @@ class CreateOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "bond_id" => ['required', 'integer', 'exists:bonds,id'],
-            "order_date" => ['required', 'date', new CheckOrderDateRule($this->get('bond_id'))],
-            "purchases_count" => ['required', 'integer', 'gt:0']
+            'id' => ['required', 'integer', 'exists:orders,id']
         ];
     }
-
     /**
      * @return void
      */
     public function prepareForValidation(): void
     {
-        $this->merge(['bond_id' => $this->route('id')]);
+        $this->merge(['id' => $this->route('id')]);
     }
 
-    public function toService(): array
+    /**
+     * @return string[]
+     */
+    public function messages(): array
     {
         return [
-            'bond_id' => $this->get('bond_id'),
-            'order_date' => $this->get('order_date'),
-            'purchases_count' => $this->get('purchases_count'),
+            "id.exists" => 'No resource found for the selected ID'
         ];
     }
 }

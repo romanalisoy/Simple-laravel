@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Order extends Model
 {
@@ -22,4 +24,12 @@ class Order extends Model
         'created_at',
         'updated_at',
     ];
+
+    /**
+     * @return BelongsTo
+     */
+    public function bond(): BelongsTo
+    {
+        return $this->belongsTo(Bond::class, 'bond_id', 'id');
+    }
 }

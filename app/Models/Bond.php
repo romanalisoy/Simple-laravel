@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Bond extends Model
 {
@@ -25,4 +26,12 @@ class Bond extends Model
       'created_at',
       'updated_at',
     ];
+
+    /**
+     * @return HasMany
+     */
+    public function bond(): HasMany
+    {
+        return $this->hasMany(Order::class, 'bond_id', 'id');
+    }
 }

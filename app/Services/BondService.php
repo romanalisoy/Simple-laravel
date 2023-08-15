@@ -3,9 +3,10 @@
 namespace App\Services;
 
 use App\Http\Requests\Bond\CreateBondRequest;
-use App\Http\Requests\Bond\CreateOrderRequest;
+use App\Http\Requests\Bond\GetBondsPayoutsRequest;
 use App\Models\Bond;
-use App\Models\Order;
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,12 +21,36 @@ class BondService
         return Bond::query()->create($request->toService());
     }
 
-    /**
-     * @param CreateOrderRequest $request
-     * @return Model|Builder
-     */
-    public function createOrder(CreateOrderRequest $request): Model|Builder
+    public function payouts(GetBondsPayoutsRequest $request)
     {
-        return Order::query()->create($request->toService());
+        $dates = $this->getPayoutDates(Bond::findOrFail($request->get('id')));
+
+        return array_map(function ($date) {
+                return ['date' => $date];
+            }, $dates);
     }
+
+    private function getPayoutDates(Bond $bond): array
+    {
+        $periodDays = match ($bond->calculation_period) {
+            360 => 12 / $bond->payment_frequency * 30,
+            364 => 364 / $bond->payment_frequency,
+            365 => 365 / $bond->payment_frequency,
+            default => 30,
+        };
+
+        $dates = [];
+        $currentDate = Carbon::parse($bond->issue_date);
+
+        while ($currentDate <= Carbon::parse($bond->last_circulation_date)) {
+            if ($currentDate->dayOfWeek == CarbonInterface::SATURDAY || $currentDate->dayOfWeek == CarbonInterface::SUNDAY) {
+                $currentDate->modify('next monday');
+            }
+            $dates[] = $currentDate->format('Y-m-d');
+            $currentDate->addDays($periodDays);
+        }
+
+        return $dates;
+    }
+
 }
