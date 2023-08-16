@@ -28,7 +28,6 @@ class OrderService
     public function getOrdersPayouts(GetOrdersPayoutsRequest $request): array
     {
         $order = Order::with('bond')->findOrFail($request->get('id'));
-        $bond = $order->bond;
 
         $paymentFrequencyDays = $order->bond->calculation_period / $order->bond->payment_frequency;
 

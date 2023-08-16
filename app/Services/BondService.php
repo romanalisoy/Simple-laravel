@@ -28,14 +28,12 @@ class BondService
     public function payouts(GetBondsPayoutsRequest $request): array
     {
         $dates = $this->getPayoutDates(Bond::findOrFail($request->id));
-
         return array_map(function ($date) {
-            $payoutDate = clone($date);
-            if ($payoutDate->dayOfWeek == CarbonInterface::SATURDAY || $payoutDate->dayOfWeek == CarbonInterface::SUNDAY) {
-                $payoutDate->modify('next monday');
+            if ($date->dayOfWeek == CarbonInterface::SATURDAY || $date->dayOfWeek == CarbonInterface::SUNDAY) {
+                $date->modify('next monday');
             }
-            info($payoutDate->dayOfWeek);
-            return ['date' => $payoutDate->format('Y-m-d')];
+            info($date->format('Y-m-d'));
+            return ['date' => $date->format('Y-m-d')];
         }, $dates);
     }
 
@@ -55,10 +53,11 @@ class BondService
         $lastDate = Carbon::parse($bond->last_circulation_date);
 
         while ($currentDate <= $lastDate) {
-            $dates[] = $currentDate;
-            $bond->calculation_period == 365 ? $currentDate->addMonths($periodDays) : $currentDate->addDays($periodDays);
-        }
+            $dates[] = $currentDate->copy();
 
+            $bond->calculation_period == 365 ? $currentDate->addMonths($periodDays) : $currentDate->addDays($periodDays);
+
+        }
         return $dates;
     }
 
