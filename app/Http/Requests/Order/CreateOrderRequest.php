@@ -25,7 +25,7 @@ class CreateOrderRequest extends FormRequest
     {
         return [
             "bond_id" => ['required', 'integer', 'exists:bonds,id'],
-            "order_date" => ['required', 'date', new CheckOrderDateRule($this->get('bond_id'))],
+            "order_date" => ['required', 'date', new CheckOrderDateRule($this->bond_id)],
             "purchases_count" => ['required', 'integer', 'gt:0']
         ];
     }
@@ -35,13 +35,13 @@ class CreateOrderRequest extends FormRequest
      */
     public function prepareForValidation(): void
     {
-        $this->merge(['bond_id' => $this->route('id')]);
+        $this->merge(['bond_id' => (int)$this->route('id')]);
     }
 
     public function toService(): array
     {
         return [
-            'bond_id' => $this->get('bond_id'),
+            'bond_id' => $this->bond_id,
             'order_date' => $this->get('order_date'),
             'purchases_count' => $this->get('purchases_count'),
         ];

@@ -1,5 +1,3 @@
-Certainly, here's your translated paragraph in English:
-
 ## Project Setup
 The project is developed with "Laravel 10". Depending on the operating system you're using, I hope you'll find the setup guide below.
 
@@ -44,11 +42,14 @@ composer -v
         * mysqli
         * pdo_mysql
         * soap
+* Install dependencies:
+  ```shell
+  composer install
+  ```
 * Start the development server:
   ```shell
   php artisan serve
   ```
-
 If you get the `'php' is not recognized as an internal or external command` error, try closing and reopening your terminal. If the error persists, search for `edit the system environment variables` in the Windows search panel, and add both `php` and `composer` there. Detailed information is available [here](https://dinocajic.medium.com/add-xampp-php-to-environment-variables-in-windows-10-af20a765b0ce).
 
 ### UNIX(Linux)
@@ -72,6 +73,12 @@ sudo chmod +x /usr/local/bin/composer
 ```shell 
   sudo nano /etc/php/8.1/apache2/php.ini
 ``` 
+
+* Install dependencies:
+```shell
+  composer install
+  ```
+  
 * Start the development server:
 ```shell 
   php artisan serve

@@ -27,11 +27,16 @@ class BondService
      */
     public function payouts(GetBondsPayoutsRequest $request): array
     {
-        $dates = $this->getPayoutDates(Bond::findOrFail($request->get('id')));
+        $dates = $this->getPayoutDates(Bond::findOrFail($request->id));
 
         return array_map(function ($date) {
-                return ['date' => $date];
-            }, $dates);
+            $payoutDate = clone($date);
+            if ($payoutDate->dayOfWeek == CarbonInterface::SATURDAY || $payoutDate->dayOfWeek == CarbonInterface::SUNDAY) {
+                $payoutDate->modify('next monday');
+            }
+            info($payoutDate->dayOfWeek);
+            return ['date' => $payoutDate->format('Y-m-d')];
+        }, $dates);
     }
 
     /**
@@ -41,21 +46,17 @@ class BondService
     private function getPayoutDates(Bond $bond): array
     {
         $periodDays = match ($bond->calculation_period) {
-            360 => 12 / $bond->payment_frequency * 30,
-            364 => 364 / $bond->payment_frequency,
-            365 => 12 / $bond->payment_frequency,
-            default => 30,
+            "360" => 12 / $bond->payment_frequency * 30,
+            "364" => 364 / $bond->payment_frequency,
+            "365" => 12 / $bond->payment_frequency
         };
-
         $dates = [];
         $currentDate = Carbon::parse($bond->issue_date);
+        $lastDate = Carbon::parse($bond->last_circulation_date);
 
-        while ($currentDate <= Carbon::parse($bond->last_circulation_date)) {
-            if ($currentDate->dayOfWeek == CarbonInterface::SATURDAY || $currentDate->dayOfWeek == CarbonInterface::SUNDAY) {
-                $currentDate->modify('next monday');
-            }
-            $dates[] = $currentDate->format('Y-m-d');
-            $currentDate->addDays($periodDays);
+        while ($currentDate <= $lastDate) {
+            $dates[] = $currentDate;
+            $bond->calculation_period == 365 ? $currentDate->addMonths($periodDays) : $currentDate->addDays($periodDays);
         }
 
         return $dates;

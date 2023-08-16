@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
  */
 Route::group(['prefix' => 'bonds', 'controller' => BondController::class], function (): void {
     Route::post('/', 'create');
-    Route::get('/{id}/payouts', 'payouts');
     Route::post('{id}/order', 'order');
+    Route::get('/{id}/payouts', 'payouts');
     Route::get('/orders/{id}', 'orderPayouts');
 });

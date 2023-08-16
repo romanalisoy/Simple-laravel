@@ -124,10 +124,6 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "bond_id": {
-                                        "type": "integer",
-                                        "example": 1
-                                    },
                                     "order_date": {
                                         "type": "string",
                                         "format": "date",

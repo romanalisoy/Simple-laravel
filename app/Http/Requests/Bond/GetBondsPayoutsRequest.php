@@ -23,7 +23,7 @@ class GetBondsPayoutsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => ['required', 'integer', 'exists:orders,id']
+            'id' => ['required', 'integer', 'exists:bonds,id']
         ];
     }
     /**
